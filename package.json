@@ -1,7 +1,7 @@
 {
   "name": "generator-jekyll-ghpages",
   "version": "0.0.0",
-  "description": "Yeoman generator",
+  "description": "Yeoman generator for jekyll ghpages",
   "license": "MIT",
   "main": "app/index.js",
   "repository": "gjeck/generator-jekyll-ghpages",
@@ -29,6 +29,7 @@
     "yosay": "^0.3.0"
   },
   "devDependencies": {
+    "gulp-gh-pages": "^0.4.0",
     "mocha": "*"
   },
   "peerDependencies": {

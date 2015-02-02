@@ -74,6 +74,7 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath('gitignore'),
         this.destinationPath('.gitignore')
       );
+      this.directory('app', 'app');
     }
   },
 
