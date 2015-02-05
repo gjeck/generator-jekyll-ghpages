@@ -47,7 +47,7 @@ module.exports = yeoman.generators.Base.extend({
     }.bind(this));
   },
 
-  authorPromption: function () {
+  authorPrompting: function () {
     var done = this.async();
 
     this.log(chalk.yellow('\nNow tell me a bit about yourself. '));
