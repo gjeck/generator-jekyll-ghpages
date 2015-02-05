@@ -24,7 +24,7 @@ module.exports = yeoman.generators.Base.extend({
     this.pkg = require('../package.json');
   },
 
-  prompting: function () {
+  projectPrompting: function () {
     var done = this.async();
 
     this.log(yosay(
@@ -32,14 +32,45 @@ module.exports = yeoman.generators.Base.extend({
     ));
 
     var prompts = [{
-      type: 'confirm',
-      name: 'someOption',
-      message: 'Would you like to enable this option?',
-      default: true
+      name: 'projectTitle',
+      message: 'What is the title of your project?'
+    }, {
+      name: 'projectDescription',
+      message: 'Describe your project for me:'
     }];
 
     this.prompt(prompts, function (props) {
-      this.someOption = props.someOption;
+      this.projectTitle = props.projectTitle;
+      this.projectDescription = props.projectDescription;
+
+      done();
+    }.bind(this));
+  },
+
+  authorPromption: function () {
+    var done = this.async();
+
+    this.log(chalk.yellow('\nNow tell me a bit about yourself. '));
+
+    var prompts = [{
+      name: 'authorName',
+      message: 'What is your name?'
+    }, {
+      name: 'authorEmail',
+      message: 'What is your email?'
+    }, {
+      name: 'authorBio',
+      message: 'Write a short description of yourself:'
+    }, {
+      name: 'authorGithub',
+      message: 'Your Github handle:'
+    }];
+
+    this.prompt(prompts, function (props) {
+      this.authorName = props.authorName;
+      this.authorEmail = props.authorEmail;
+      this.authorBio = props.authorBio;
+      this.authorGithub = props.authorGithub;
 
       done();
     }.bind(this));
