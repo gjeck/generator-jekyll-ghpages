@@ -23,6 +23,7 @@ describe('jekyll-ghpages:app', function () {
       'bower.json',
       'package.json',
       'Gemfile',
+      'gulpfile.js',
       '.gitignore',
       '.editorconfig',
       '.jshintrc'

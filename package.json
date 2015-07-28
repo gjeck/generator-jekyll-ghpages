@@ -25,6 +25,7 @@
     "yosay": "^1.0.2"
   },
   "devDependencies": {
+    "gulp-gh-pages": "^0.5.2",
     "mocha": "*",
     "mocha-jshint": "^2.2.3"
   }
