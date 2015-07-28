@@ -5,11 +5,16 @@ var assert = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
 var os = require('os');
 
+var linter = require('mocha-jshint')({
+  paths: [ 
+    './generators/',
+  ]
+});
+
 describe('jekyll-ghpages:app', function () {
   before(function (done) {
     helpers.run(path.join(__dirname, '../generators/app'))
       .withOptions({ skipInstall: true })
-      .withPrompts({ someOption: true })
       .on('end', done);
   });
 
@@ -17,6 +22,8 @@ describe('jekyll-ghpages:app', function () {
     assert.file([
       'bower.json',
       'package.json',
+      'Gemfile',
+      '.gitignore',
       '.editorconfig',
       '.jshintrc'
     ]);
