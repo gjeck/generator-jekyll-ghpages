@@ -5,7 +5,7 @@ description: <%= project_description %>
 
 baseurl: ''
 url: localhost:4000
-source: _source
+source: _site
 destination: _deploy
 
 author:
