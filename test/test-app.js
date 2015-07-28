@@ -24,6 +24,7 @@ describe('jekyll-ghpages:app', function () {
       'package.json',
       'Gemfile',
       'gulpfile.js',
+      'CNAME',
       '.gitignore',
       '.editorconfig',
       '.jshintrc'

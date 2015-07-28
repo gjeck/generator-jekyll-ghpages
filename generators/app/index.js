@@ -83,6 +83,10 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath('_Gemfile'),
         this.destinationPath('Gemfile')
       );
+      this.fs.copy(
+        this.templatePath('_CNAME'),
+        this.destinationPath('CNAME')
+      );
       this.directory('app', 'app');
     },
 
