@@ -17,16 +17,20 @@ module.exports = yeoman.generators.Base.extend({
     ));
 
     var prompts = [{
-      name: 'projectTitle',
+      name: 'project_title',
       message: 'What is the title of your project?'
     }, {
-      name: 'projectDescription',
+      name: 'project_description',
       message: 'Describe your project for me:'
+    }, {
+      name: 'project_url',
+      message: 'Enter project url (domain)'
     }];
 
     this.prompt(prompts, function (props) {
-      this.projectTitle = props.projectTitle;
-      this.projectDescription = props.projectDescription;
+      this.project_title = props.project_title;
+      this.project_description = props.project_description;
+      this.project_url = props.project_url;
 
       done();
     }.bind(this));
@@ -38,24 +42,24 @@ module.exports = yeoman.generators.Base.extend({
     this.log(chalk.yellow('\nNow tell me a bit about yourself. '));
 
     var prompts = [{
-      name: 'authorName',
+      name: 'author_name',
       message: 'What is your name?'
     }, {
-      name: 'authorEmail',
+      name: 'author_email',
       message: 'What is your email?'
     }, {
-      name: 'authorBio',
+      name: 'author_bio',
       message: 'Write a short description of yourself:'
     }, {
-      name: 'authorGithub',
+      name: 'author_github',
       message: 'Your Github handle:'
     }];
 
     this.prompt(prompts, function (props) {
-      this.authorName = props.authorName;
-      this.authorEmail = props.authorEmail;
-      this.authorBio = props.authorBio;
-      this.authorGithub = props.authorGithub;
+      this.author_name = props.author_name;
+      this.author_email = props.author_email;
+      this.author_bio = props.author_bio;
+      this.author_github = props.author_github;
 
       done();
     }.bind(this));
