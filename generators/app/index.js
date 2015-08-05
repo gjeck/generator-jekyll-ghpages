@@ -7,6 +7,11 @@ module.exports = yeoman.generators.Base.extend({
 
   constructor: function () {
     yeoman.generators.Base.apply(this, arguments);
+
+    this.option('skip-install', {
+      desc: 'Skip installing dependencies',
+      type: Boolean
+    });
   },
 
   prompting: function () {
@@ -18,19 +23,44 @@ module.exports = yeoman.generators.Base.extend({
 
     var prompts = [{
       name: 'project_title',
-      message: 'What is the title of your project?'
+      message: 'What is the title of your project?',
     }, {
       name: 'project_description',
-      message: 'Describe your project for me:'
+      message: 'Describe your project for me:',
     }, {
+      type: 'confirm',
+      name: 'create_cname',
+      message: 'Will you use a custom domain?',
+    }, {
+      when: function(props) { return props.create_cname; },
       name: 'project_url',
-      message: 'Enter project url (domain)'
+      message: 'Enter custom domain (project url)',
+    }, {
+      type: 'list',
+      name: 'ghpage_type',
+      message: 'What type of github pages project is this?' + 
+               chalk.yellow('\n  learn more at https://pages.github.com/'),
+      choices: ['user', 'project'],
+    }, {
+      name: 'jekyll_permalinks',
+      type: 'list',
+      message: 'Permalink style' + (chalk.yellow(
+                  '\n  pretty: /:year/:month/:day/:title/' +
+                  '\n  date:   /:year/:month/:day/:title.html' +
+                  '\n  none:   /:categories/:title.html')) + '\n',
+      choices: ['pretty', 'date', 'none'],
     }];
 
     this.prompt(prompts, function (props) {
       this.project_title = props.project_title;
       this.project_description = props.project_description;
       this.project_url = props.project_url;
+      this.create_cname = props.create_cname;
+      if (this.create_cname) {
+          this.project_url = props.project_url;
+      }
+      this.ghpage_type = props.ghpage_type;
+      this.jekyll_permalinks = props.jekyll_permalinks;
 
       done();
     }.bind(this));
@@ -52,7 +82,7 @@ module.exports = yeoman.generators.Base.extend({
       message: 'Write a short description of yourself:'
     }, {
       name: 'author_github',
-      message: 'Your Github handle:'
+      message: 'Your github handle:'
     }];
 
     this.prompt(prompts, function (props) {
@@ -83,10 +113,12 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath('_Gemfile'),
         this.destinationPath('Gemfile')
       );
-      this.fs.copy(
-        this.templatePath('_CNAME'),
-        this.destinationPath('CNAME')
-      );
+      if (this.create_cname) {
+        this.fs.copy(
+          this.templatePath('_CNAME'),
+          this.destinationPath('CNAME')
+        );
+      }
       this.directory('app', 'app');
     },
 

@@ -1,18 +1,19 @@
-# Local Settings
-#
+## Local Settings ##
+
 title: <%= project_title %>
 description: <%= project_description %>
 
-baseurl: ''
-url: localhost:4000
-source: _site
-destination: _deploy
-
 author:
-    name: <%= author_name %>
-    email: <%= author_email %>
-    bio: <%= author_bio %>
-    github: <%= author_github %>
+  name: <%= author_name %>
+  email: <%= author_email %>
+  bio: <%= author_bio %>
+  github: <%= author_github %>
 
-# Build settings
+host: 127.0.0.1
+port: 4000
+baseurl: ''
+
+source: .
+destination: ./_site
+
 markdown: kramdown
