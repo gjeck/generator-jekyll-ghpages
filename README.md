@@ -2,6 +2,11 @@
 
 > [Yeoman](http://yeoman.io) generator
 
+## What is this balderdash?
+
+This project is still under development. The project goal is to create a very simple
+generator for use on github pages for user, organization, or project sites. The
+generator will be a vanilla jekyll install with a light gulp managed front end.
 
 ## Getting Started
 
