@@ -14,7 +14,8 @@ describe('jekyll-ghpages:jekyll', function () {
 
   it('creates files', function () {
     assert.file([
-      'somefile.js'
+      'Gemfile',
+      'app',
     ]);
   });
 });

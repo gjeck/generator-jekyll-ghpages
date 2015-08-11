@@ -2,6 +2,7 @@
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
+var _ = require('lodash');
 
 module.exports = yeoman.generators.Base.extend({
 
@@ -28,6 +29,9 @@ module.exports = yeoman.generators.Base.extend({
       name: 'project_description',
       message: 'Describe your project for me:',
     }, {
+      name: 'project_homepage',
+      message: 'Enter homepage for project (e.g github repo url)',
+    }, {
       type: 'confirm',
       name: 'create_cname',
       message: 'Will you use a custom domain?',
@@ -53,6 +57,7 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (props) {
       this.project_title = props.project_title;
+      this.project_title_slug = _.kebabCase(this.project_title);
       this.project_description = props.project_description;
       this.project_url = props.project_url;
       this.create_cname = props.create_cname;
@@ -96,7 +101,7 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   writing: {
-    app: function () {
+    projectfiles: function () {
       this.fs.copy(
         this.templatePath('_package.json'),
         this.destinationPath('package.json')
@@ -105,24 +110,12 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath('_bower.json'),
         this.destinationPath('bower.json')
       );
-      this.fs.copy(
-        this.templatePath('_gulpfile.js'),
-        this.destinationPath('gulpfile.js')
-      );
-      this.fs.copy(
-        this.templatePath('_Gemfile'),
-        this.destinationPath('Gemfile')
-      );
       if (this.create_cname) {
         this.fs.copy(
           this.templatePath('_CNAME'),
           this.destinationPath('CNAME')
         );
       }
-      this.directory('app', 'app');
-    },
-
-    projectfiles: function () {
       this.fs.copy(
         this.templatePath('editorconfig'),
         this.destinationPath('.editorconfig')

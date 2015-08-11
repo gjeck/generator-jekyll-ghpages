@@ -3,7 +3,6 @@
 var path = require('path');
 var assert = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
-var os = require('os');
 
 describe('jekyll-ghpages:app', function () {
   before(function (done) {
@@ -16,8 +15,6 @@ describe('jekyll-ghpages:app', function () {
     assert.file([
       'bower.json',
       'package.json',
-      'Gemfile',
-      'gulpfile.js',
       'CNAME',
       '.gitignore',
       '.editorconfig',
