@@ -106,10 +106,6 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath('_package.json'),
         this.destinationPath('package.json')
       );
-      this.fs.copy(
-        this.templatePath('_bower.json'),
-        this.destinationPath('bower.json')
-      );
       if (this.create_cname) {
         this.fs.copy(
           this.templatePath('_CNAME'),
