@@ -1,8 +1,10 @@
 'use strict';
+
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
+
 
 module.exports = yeoman.generators.Base.extend({
 
@@ -13,6 +15,10 @@ module.exports = yeoman.generators.Base.extend({
       desc: 'Skip installing dependencies',
       type: Boolean
     });
+  },
+
+  initializing: function () {
+    this.props = {};
   },
 
   prompting: function () {
@@ -56,16 +62,11 @@ module.exports = yeoman.generators.Base.extend({
     }];
 
     this.prompt(prompts, function (props) {
-      this.project_title = props.project_title;
-      this.project_title_slug = _.kebabCase(this.project_title);
-      this.project_description = props.project_description;
-      this.project_url = props.project_url;
-      this.create_cname = props.create_cname;
-      if (this.create_cname) {
-          this.project_url = props.project_url;
+      this.props = _.extend(this.props, props);
+      this.props.project_title_slug = _.kebabCase(props.project_title);
+      if (props.create_cname) {
+          this.props.project_url = props.project_url;
       }
-      this.ghpage_type = props.ghpage_type;
-      this.jekyll_permalinks = props.jekyll_permalinks;
 
       done();
     }.bind(this));
@@ -91,25 +92,23 @@ module.exports = yeoman.generators.Base.extend({
     }];
 
     this.prompt(prompts, function (props) {
-      this.author_name = props.author_name;
-      this.author_email = props.author_email;
-      this.author_bio = props.author_bio;
-      this.author_github = props.author_github;
-
+      this.props = _.extend(this.props, props);
       done();
     }.bind(this));
   },
 
   writing: {
     projectfiles: function () {
-      this.fs.copy(
+      this.fs.copyTpl(
         this.templatePath('_package.json'),
-        this.destinationPath('package.json')
+        this.destinationPath('package.json'),
+        this.props
       );
-      if (this.create_cname) {
-        this.fs.copy(
+      if (this.props.create_cname) {
+        this.fs.copyTpl(
           this.templatePath('_CNAME'),
-          this.destinationPath('CNAME')
+          this.destinationPath('CNAME'),
+          this.props
         );
       }
       this.fs.copy(
@@ -125,6 +124,13 @@ module.exports = yeoman.generators.Base.extend({
         this.destinationPath('.gitignore')
       );
     }
+  },
+
+  default: function() {
+    this.composeWith('jekyll-ghpages:jekyll', {
+      options: {
+      }
+    });
   },
 
   install: function () {
