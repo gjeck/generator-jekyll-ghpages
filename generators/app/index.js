@@ -41,8 +41,9 @@ module.exports = yeoman.generators.Base.extend({
       type: 'confirm',
       name: 'create_cname',
       message: 'Will you use a custom domain?',
+      default: 'Y/n'
     }, {
-      when: function(props) { return props.create_cname; },
+      when: function(props) { return (/y/i).test(props.create_cname); },
       name: 'project_url',
       message: 'Enter custom domain (project url)',
     }, {
@@ -104,7 +105,7 @@ module.exports = yeoman.generators.Base.extend({
         this.destinationPath('package.json'),
         this.props
       );
-      if (this.props.create_cname) {
+      if ((/y/i).test(this.props.create_cname)) {
         this.fs.copyTpl(
           this.templatePath('_CNAME'),
           this.destinationPath('CNAME'),
