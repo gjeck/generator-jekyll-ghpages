@@ -8,3 +8,6 @@ dist/
 
 # Temp files
 *.swp
+
+# OSX
+*.DS_Store
