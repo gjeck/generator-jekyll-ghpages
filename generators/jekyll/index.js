@@ -14,7 +14,7 @@ module.exports = yeoman.generators.Base.extend({
 
   writing: function () {
     this.fs.copy(
-      this.templatePath('_Gemfile'),
+      this.templatePath('Gemfile'),
       this.destinationPath('Gemfile')
     );
     this.fs.copy(
