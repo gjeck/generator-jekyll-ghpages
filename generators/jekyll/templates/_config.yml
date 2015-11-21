@@ -17,3 +17,8 @@ source: app
 destination: _site
 
 markdown: kramdown
+
+permalink: <%= jekyll_permalinks %>
+paginate: 10
+paginate_path: 'page:num'
+excerpt_separator: '<!--more-->'
