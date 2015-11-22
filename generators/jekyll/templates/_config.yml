@@ -24,3 +24,6 @@ paginate_path: 'page:num'
 excerpt_separator: '<!--more-->'
 future: true
 show_drafts: true
+
+gems:
+  - jekyll-paginate

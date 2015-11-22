@@ -29,41 +29,50 @@ module.exports = yeoman.generators.Base.extend({
     ));
 
     var prompts = [{
+      type: 'input',
       name: 'project_title',
-      message: 'What is the title of your project?',
+      message: 'What is the title of your project?'
     }, {
+      type: 'input',
       name: 'project_description',
-      message: 'Describe your project for me:',
+      message: 'Describe your project for me:'
     }, {
+      type: 'input',
       name: 'project_homepage',
-      message: 'Enter homepage for project (e.g github repo url)',
+      message: 'Enter homepage for project (e.g github repo url)'
     }, {
       type: 'confirm',
       name: 'create_cname',
       message: 'Will you use a custom domain?',
       default: 'Y/n'
     }, {
-      when: function(props) { return (/y/i).test(props.create_cname); },
+      type: 'input',
       name: 'project_url',
       message: 'Enter custom domain (project url)',
+      when: function(props) {
+        return props.create_cname;
+      }
     }, {
       type: 'list',
       name: 'gh_page_type',
       message: 'What type of github pages project is this?' +
                chalk.yellow('\n  learn more at https://pages.github.com/'),
-      choices: ['user', 'project'],
+      choices: ['user', 'project']
     }, {
-      when: function(props) { return (/project/i).test(props.ghpage_type); },
+      type: 'input',
       name: 'gh_repo_name',
       message: 'Enter the name of your Github repo',
+      when: function(props) {
+        return (/project/i).test(props.gh_page_type);
+      }
     }, {
-      name: 'jekyll_permalinks',
       type: 'list',
+      name: 'jekyll_permalinks',
       message: 'Permalink style' + (chalk.yellow(
                   '\n  pretty: /:year/:month/:day/:title/' +
                   '\n  date:   /:year/:month/:day/:title.html' +
                   '\n  none:   /:categories/:title.html')) + '\n',
-      choices: ['pretty', 'date', 'none'],
+      choices: ['pretty', 'date', 'none']
     }];
 
     this.prompt(prompts, function (props) {
@@ -83,15 +92,19 @@ module.exports = yeoman.generators.Base.extend({
     this.log(chalk.yellow('\nNow tell me a bit about yourself. '));
 
     var prompts = [{
+      type: 'input',
       name: 'author_name',
       message: 'What is your name?'
     }, {
+      type: 'input',
       name: 'author_email',
       message: 'What is your email?'
     }, {
+      type: 'input',
       name: 'author_bio',
       message: 'Write a short description of yourself:'
     }, {
+      type: 'input',
       name: 'author_github',
       message: 'Your github handle:'
     }];

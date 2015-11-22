@@ -5,10 +5,10 @@
   "homepage": "<%= project_homepage %>",
   "author": {
       "name": "<%= author_name %>",
-      "email": "<%= author_email %>",
+      "email": "<%= author_email %>"
   },
   "dependencies": {
       "gulp": "^3.9.0",
-      "gulp-gh-pages": "^0.5.2",
+      "gulp-gh-pages": "^0.5.2"
   }
 }
