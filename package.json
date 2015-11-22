@@ -21,7 +21,6 @@
   ],
   "dependencies": {
     "chalk": "^1.1.0",
-    "gulp-gh-pages": "^0.5.2",
     "lodash": "^3.10.1",
     "yeoman-generator": "^0.21.0",
     "yosay": "^1.1.0"

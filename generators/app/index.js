@@ -107,6 +107,10 @@ module.exports = yeoman.generators.Base.extend({
       type: 'input',
       name: 'author_github',
       message: 'Your github handle:'
+    }, {
+      type: 'input',
+      name: 'author_twitter',
+      message: 'Your twitter handle:'
     }];
 
     this.prompt(prompts, function (props) {
@@ -156,7 +160,8 @@ module.exports = yeoman.generators.Base.extend({
         author_name: this.props.author_name,
         author_email: this.props.author_email,
         author_bio: this.props.author_bio,
-        author_github: this.props.author_github
+        author_github: this.props.author_github,
+        author_twitter: this.props.author_twitter
       },
     });
   },

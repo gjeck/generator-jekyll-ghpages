@@ -53,6 +53,11 @@ module.exports = yeoman.generators.Base.extend({
       required: true,
       desc: 'Author Github profile'
     });
+    this.option('author_twitter', {
+      type: String,
+      required: true,
+      desc: 'Author Twitter profile'
+    });
     this._adjust_gh_repo_name();
   },
 
