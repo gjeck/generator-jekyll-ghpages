@@ -48,10 +48,14 @@ module.exports = yeoman.generators.Base.extend({
       message: 'Enter custom domain (project url)',
     }, {
       type: 'list',
-      name: 'ghpage_type',
-      message: 'What type of github pages project is this?' + 
+      name: 'gh_page_type',
+      message: 'What type of github pages project is this?' +
                chalk.yellow('\n  learn more at https://pages.github.com/'),
       choices: ['user', 'project'],
+    }, {
+      when: function(props) { return (/project/i).test(props.ghpage_type); },
+      name: 'gh_repo_name',
+      message: 'Enter the name of your Github repo',
     }, {
       name: 'jekyll_permalinks',
       type: 'list',
@@ -130,7 +134,17 @@ module.exports = yeoman.generators.Base.extend({
   default: function() {
     this.composeWith('jekyll-ghpages:jekyll', {
       options: {
-      }
+        project_title: this.props.project_title,
+        project_description: this.props.project_description,
+        project_homepage: this.props.project_homepage,
+        gh_page_type: this.props.gh_page_type,
+        gh_repo_name: this.props.gh_repo_name,
+        jekyll_permalinks: this.props.jekyll_permalinks,
+        author_name: this.props.author_name,
+        author_email: this.props.author_email,
+        author_bio: this.props.author_bio,
+        author_github: this.props.author_github
+      },
     });
   },
 
