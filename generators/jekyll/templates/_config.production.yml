@@ -1,0 +1,5 @@
+## Production Settings ##
+
+baseurl: <%= gh_repo_name %>
+future: false
+show_drafts: false

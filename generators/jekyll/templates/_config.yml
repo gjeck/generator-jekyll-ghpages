@@ -8,12 +8,23 @@ author:
   email: <%= author_email %>
   bio: <%= author_bio %>
   github: <%= author_github %>
+  twitter: <%= author_twitter %>
 
 host: 127.0.0.1
 port: 4000
 baseurl: ''
 
 source: app
-destination: _site
+destination: .jekyll_tmp
 
 markdown: kramdown
+
+permalink: <%= jekyll_permalinks %>
+paginate: 10
+paginate_path: 'page:num'
+excerpt_separator: '<!--more-->'
+future: true
+show_drafts: true
+
+gems:
+  - jekyll-paginate

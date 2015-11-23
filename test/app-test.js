@@ -14,7 +14,7 @@ describe('jekyll-ghpages:app', function () {
         project_homepage: 'www.testhome.com',
         create_cname: 'y',
         project_url: 'www.testdomain.com',
-        ghpage_type: 'user',
+        gh_page_type: 'user',
         jekyll_permalinks: 'pretty',
         author_name: 'tester',
         author_email: 'tester@test.com',
