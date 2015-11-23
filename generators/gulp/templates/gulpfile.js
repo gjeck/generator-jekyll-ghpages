@@ -14,8 +14,12 @@ var gulp = require('gulp'),
 var paths = {
   sass:   ['app/assets/css/*.scss'],
   js:     ['app/assets/js/*.js'],
-  html:   ['.jekyll_tmp/**/*.html'],
-  xml:    ['.jekyll_tmp/**/*.xml'],
+  html:   ['app/**/*.html'],
+  xml:    ['app/**/*.xml'],
+  yml:    ['app/**/*.yml'],
+  md:     ['app/**/*.md'],
+  txt:    ['app/**/*.txt'],
+  jhtml:  ['.jekyll_tmp/**/*.html'],
   tmp:    '.jekyll_tmp/',
   dist:   '.dist/',
   dcss:   '.dist/assets/css/',
@@ -60,17 +64,17 @@ gulp.task('styles', ['jekyll'], function() {
   return gulp.src(paths.sass)
              .pipe(sass())
              .pipe(concat('main.css'))
-	           .pipe(gulp.dest(paths.dcss))
-	           .pipe(browser_sync.stream());
+	     .pipe(gulp.dest(paths.dcss))
+	     .pipe(browser_sync.stream());
 });
 
 gulp.task('styles:prod', ['jekyll:prod'], function() {
   return gulp.src(paths.sass)
              .pipe(sass())
              .pipe(concat('main.css'))
-	           .pipe(mincss())
-	           .pipe(gzip())
-	           .pipe(gulp.dest(paths.dcss));
+	     .pipe(mincss())
+	     .pipe(gzip())
+	     .pipe(gulp.dest(paths.dcss));
 });
 
 gulp.task('lint', ['jekyll'], function() {
@@ -88,28 +92,29 @@ gulp.task('lint:prod', ['jekyll:prod'], function() {
 gulp.task('scripts', ['jekyll'], function() {
   return gulp.src(paths.js)
              .pipe(concat('main.js'))
-	           .pipe(gulp.dest(paths.djs))
-	           .pipe(browser_sync.stream());
+	     .pipe(gulp.dest(paths.djs))
+	     .pipe(browser_sync.stream());
 });
 
 gulp.task('scripts:prod', ['jekyll:prod'], function() {
   return gulp.src(paths.js)
              .pipe(concat('main.js'))
-	           .pipe(uglify())
-	           .pipe(gzip())
-	           .pipe(gulp.dest(paths.djs));
+	     .pipe(uglify())
+	     .pipe(gzip())
+	     .pipe(gulp.dest(paths.djs));
 });
 
 gulp.task('html', ['jekyll'], function() {
-  return gulp.src(paths.html)
+  return gulp.src(paths.jhtml)
              .pipe(gulp.dest(paths.dist));
 });
 
 gulp.task('html:prod', ['jekyll:prod'], function() {
-  return gulp.src(paths.html)
+  return gulp.src(paths.jhtml)
              .pipe(minhtml())
-	           .pipe(gzip())
-	           .pipe(gulp.dest(paths.dist));
+
+	     .pipe(gzip())
+	     .pipe(gulp.dest(paths.dist));
 });
 
 gulp.task('build', [
@@ -137,6 +142,7 @@ gulp.task('serve', ['build'], function() {
 
   gulp.watch(paths.sass, ['styles']);
   gulp.watch(paths.js, ['scripts']);
+  gulp.watch([paths.yml, paths.html, paths.md, paths.txt], ['build']);
 });
 
 gulp.task('serve:prod', ['build:prod'], function() {
