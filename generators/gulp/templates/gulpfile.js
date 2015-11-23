@@ -10,19 +10,20 @@ var gulp         = require('gulp'),
     uglify       = require('gulp-uglify'),
     gzip         = require('gulp-gzip'),
     imagemin     = require('gulp-imagemin'),
-    grev         = require('gulp-rev'),
     del          = require('del');
 
+/*
+  Add all component paths from node, bower, etc, right here
+*/
 var vendor_paths = {
-  sass:   [],
-  css:    [],
+  scss:   [],
   js:     [],
   images: [],
   fonts:  []
 };
 
 var paths = {
-  sass:   ['app/assets/css/**/*.scss'],
+  scss:   ['app/assets/css/**/*.scss'],
   js:     ['app/assets/js/**/*.js'],
   images: ['app/assets/images/*'],
   fonts:  ['app/assets/fonts/*'],
@@ -76,21 +77,37 @@ gulp.task('xml:prod', ['jekyll:prod'], function() {
 });
 
 gulp.task('styles', ['jekyll'], function() {
-  return gulp.src(paths.sass)
+  return gulp.src(paths.scss)
              .pipe(sass())
              .pipe(concat('main.css'))
-	           .pipe(gulp.dest(paths.dcss))
-	           .pipe(browser_sync.stream());
+             .pipe(gulp.dest(paths.dcss))
+             .pipe(browser_sync.stream());
 });
 
 gulp.task('styles:prod', ['jekyll:prod'], function() {
-  return gulp.src(paths.sass)
+  return gulp.src(paths.scss)
              .pipe(sass())
              .pipe(concat('main.css'))
-	           .pipe(mincss())
-	           .pipe(gzip())
-	           .pipe(grev())
-	           .pipe(gulp.dest(paths.dcss));
+             .pipe(mincss())
+             .pipe(gzip())
+             .pipe(gulp.dest(paths.dcss));
+});
+
+gulp.task('vendor:styles', ['jekyll'], function() {
+  return gulp.src(vendor_paths.scss)
+             .pipe(sass())
+             .pipe(concat('vendor.css'))
+             .pipe(gulp.dest(paths.dcss))
+             .pipe(browser_sync.stream());
+});
+
+gulp.task('vendor:styles:prod', ['jekyll:prod'], function() {
+  return gulp.src(vendor_paths.scss)
+             .pipe(sass())
+             .pipe(concat('vendor.css'))
+             .pipe(mincss())
+             .pipe(gzip())
+             .pipe(gulp.dest(paths.dcss));
 });
 
 gulp.task('lint', function() {
@@ -106,24 +123,38 @@ gulp.task('fonts', function() {
 
 gulp.task('images', function() {
   return gulp.src(paths.images)
-	           .pipe(imagemin({ progressive: true }))
-	           .pipe(gulp.dest(paths.dimages));
+             .pipe(imagemin({ progressive: true }))
+             .pipe(gulp.dest(paths.dimages));
 });
 
 gulp.task('scripts', ['jekyll'], function() {
   return gulp.src(paths.js)
              .pipe(concat('main.js'))
-	           .pipe(gulp.dest(paths.djs))
-	           .pipe(browser_sync.stream());
+             .pipe(gulp.dest(paths.djs))
+             .pipe(browser_sync.stream());
 });
 
 gulp.task('scripts:prod', ['jekyll:prod'], function() {
   return gulp.src(paths.js)
              .pipe(concat('main.js'))
-	           .pipe(uglify())
-	           .pipe(gzip())
-	           .pipe(grev())
-	           .pipe(gulp.dest(paths.djs));
+             .pipe(uglify())
+             .pipe(gzip())
+             .pipe(gulp.dest(paths.djs));
+});
+
+gulp.task('vendor:scripts', ['jekyll'], function() {
+  return gulp.src(vendor_paths.js)
+             .pipe(concat('vendor.js'))
+             .pipe(gulp.dest(paths.djs))
+             .pipe(browser_sync.stream());
+});
+
+gulp.task('vendor:scripts:prod', ['jekyll:prod'], function() {
+  return gulp.src(vendor_paths.js)
+             .pipe(concat('vendor.js'))
+             .pipe(uglify())
+             .pipe(gzip())
+             .pipe(gulp.dest(paths.djs));
 });
 
 gulp.task('html', ['jekyll'], function() {
@@ -134,14 +165,16 @@ gulp.task('html', ['jekyll'], function() {
 gulp.task('html:prod', ['jekyll:prod'], function() {
   return gulp.src(paths.jhtml)
              .pipe(minhtml())
-	           .pipe(gzip())
-	           .pipe(gulp.dest(paths.dist));
+             .pipe(gzip())
+             .pipe(gulp.dest(paths.dist));
 });
 
 gulp.task('build', [
   'html',
   'styles',
+  'vendor:styles',
   'scripts',
+  'vendor:scripts',
   'xml',
   'lint',
   'fonts',
@@ -151,7 +184,9 @@ gulp.task('build', [
 gulp.task('build:prod', [
   'html:prod',
   'styles:prod',
+  'vendor:styles:prod',
   'scripts:prod',
+  'vendor:scripts:prod',
   'xml:prod',
   'lint',
   'fonts',
@@ -165,7 +200,7 @@ gulp.task('serve', ['build'], function() {
     }
   });
 
-  gulp.watch(paths.sass, ['styles']);
+  gulp.watch(paths.scss, ['styles']);
   gulp.watch(paths.js, ['scripts']);
   gulp.watch([paths.yml, paths.html, paths.md, paths.txt], ['build']);
 });
