@@ -20,6 +20,7 @@ var paths = {
   md:     ['app/**/*.md'],
   txt:    ['app/**/*.txt'],
   jhtml:  ['.jekyll_tmp/**/*.html'],
+  jxml:   ['.jekyll_tmp/**/*.xml'],
   tmp:    '.jekyll_tmp/',
   dist:   '.dist/',
   dcss:   '.dist/assets/css/',
@@ -50,12 +51,12 @@ gulp.task('jekyll:prod', ['clean', 'doctor'], function(cb) {
 });
 
 gulp.task('xml', ['jekyll'], function() {
-  return gulp.src(paths.xml)
+  return gulp.src(paths.jxml)
              .pipe(gulp.dest(paths.dist));
 });
 
 gulp.task('xml:prod', ['jekyll:prod'], function() {
-  return gulp.src(paths.xml)
+  return gulp.src(paths.jxml)
              .pipe(gzip())
              .pipe(gulp.dest(paths.dist));
 });
@@ -112,7 +113,6 @@ gulp.task('html', ['jekyll'], function() {
 gulp.task('html:prod', ['jekyll:prod'], function() {
   return gulp.src(paths.jhtml)
              .pipe(minhtml())
-
 	     .pipe(gzip())
 	     .pipe(gulp.dest(paths.dist));
 });
@@ -154,6 +154,7 @@ gulp.task('serve:prod', ['build:prod'], function() {
 
   gulp.watch(paths.sass, ['styles:prod']);
   gulp.watch(paths.js, ['scripts:prod']);
+  gulp.watch([paths.yml, paths.html, paths.md, paths.txt], ['build:prod']);
 });
 
 gulp.task('default', ['serve']);
