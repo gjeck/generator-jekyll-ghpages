@@ -8,77 +8,146 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     jshint = require('gulp-jshint'),
     uglify = require('gulp-uglify'),
+    gzip = require('gulp-gzip'),
     del = require('del');
 
 var paths = {
   sass:   ['app/assets/css/*.scss'],
   js:     ['app/assets/js/*.js'],
   html:   ['.jekyll_tmp/**/*.html'],
-  tmpcss: ['.tmp/*.css'],
-  tmp:    '.tmp/',
+  xml:    ['.jekyll_tmp/**/*.xml'],
+  tmp:    '.jekyll_tmp/',
   dist:   '.dist/',
   dcss:   '.dist/assets/css/',
   djs:    '.dist/assets/js/'
 };
 
-gulp.task('build', function() {
-  shell.exec('bundle exec jekyll build');
+gulp.task('clean', function() {
+  return del([paths.tmp, paths.dist]);
 });
 
-gulp.task('build:prod', function() {
-  shell.exec('bundle exec jekyll build --config _config.yml,_config.production.yml');
+gulp.task('doctor', function(cb) {
+  shell.exec('bundle exec jekyll doctor', function(err) {
+    return err ? cb(err) : cb();
+  });
 });
 
-gulp.task('doctor', function() {
-  shell.exec('bundle exec jekyll doctor');
+gulp.task('jekyll', ['clean', 'doctor'], function(cb) {
+  shell.exec('bundle exec jekyll build', function(err) {
+    return err ? cb(err) : cb();
+  });
 });
 
-gulp.task('sass', function() {
+gulp.task('jekyll:prod', ['clean', 'doctor'], function(cb) {
+  var command = 'bundle exec jekyll build --config _config.yml,_config.production.yml';
+  shell.exec(command, function(err) {
+    return err ? cb(err) : cb();
+  });
+});
+
+gulp.task('xml', ['jekyll'], function() {
+  return gulp.src(paths.xml)
+             .pipe(gulp.dest(paths.dist));
+});
+
+gulp.task('xml:prod', ['jekyll:prod'], function() {
+  return gulp.src(paths.xml)
+             .pipe(gzip())
+             .pipe(gulp.dest(paths.dist));
+});
+
+gulp.task('styles', ['jekyll'], function() {
   return gulp.src(paths.sass)
              .pipe(sass())
-	           .pipe(gulp.dest(paths.tmp))
+             .pipe(concat('main.css'))
+	           .pipe(gulp.dest(paths.dcss))
+	           .pipe(browser_sync.stream());
 });
 
-gulp.task('source_styles', ['sass'], function() {
-  return gulp.src(paths.tmpcss)
+gulp.task('styles:prod', ['jekyll:prod'], function() {
+  return gulp.src(paths.sass)
+             .pipe(sass())
              .pipe(concat('main.css'))
 	           .pipe(mincss())
-	           .pipe(gulp.dest(paths.dcss))
-	           .pipe(browser_sync.stream())
+	           .pipe(gzip())
+	           .pipe(gulp.dest(paths.dcss));
 });
 
-gulp.task('lint', function() {
+gulp.task('lint', ['jekyll'], function() {
   return gulp.src(paths.js)
              .pipe(jshint())
              .pipe(jshint.reporter('default'));
 });
 
-gulp.task('source_scripts', function() {
+gulp.task('lint:prod', ['jekyll:prod'], function() {
+  return gulp.src(paths.js)
+             .pipe(jshint())
+             .pipe(jshint.reporter('default'));
+});
+
+gulp.task('scripts', ['jekyll'], function() {
+  return gulp.src(paths.js)
+             .pipe(concat('main.js'))
+	           .pipe(gulp.dest(paths.djs))
+	           .pipe(browser_sync.stream());
+});
+
+gulp.task('scripts:prod', ['jekyll:prod'], function() {
   return gulp.src(paths.js)
              .pipe(concat('main.js'))
 	           .pipe(uglify())
-	           .pipe(gulp.dest(paths.djs))
+	           .pipe(gzip())
+	           .pipe(gulp.dest(paths.djs));
 });
 
-gulp.task('html', function() {
+gulp.task('html', ['jekyll'], function() {
+  return gulp.src(paths.html)
+             .pipe(gulp.dest(paths.dist));
+});
+
+gulp.task('html:prod', ['jekyll:prod'], function() {
   return gulp.src(paths.html)
              .pipe(minhtml())
+	           .pipe(gzip())
 	           .pipe(gulp.dest(paths.dist));
 });
 
-gulp.task('js-watch', ['source_scripts'], browser_sync.reload);
+gulp.task('build', [
+  'html',
+  'styles',
+  'scripts',
+  'xml',
+  'lint'
+]);
 
-gulp.task('serve', function() {
+gulp.task('build:prod', [
+  'html:prod',
+  'styles:prod',
+  'scripts:prod',
+  'xml:prod',
+  'lint:prod',
+]);
+
+gulp.task('serve', ['build'], function() {
   browser_sync.init({
     server: {
-      baseDir: '.dist/'
+      baseDir: paths.dist
     }
   });
 
-  gulp.watch(paths.sass, ['source_styles']);
-  gulp.watch(paths.js, ['js-watch']);
+  gulp.watch(paths.sass, ['styles']);
+  gulp.watch(paths.js, ['scripts']);
 });
 
-gulp.task('default', ['build'], function() {
-  console.log('done');
+gulp.task('serve:prod', ['build:prod'], function() {
+  browser_sync.init({
+    server: {
+      baseDir: paths.dist
+    }
+  });
+
+  gulp.watch(paths.sass, ['styles:prod']);
+  gulp.watch(paths.js, ['scripts:prod']);
 });
+
+gulp.task('default', ['serve']);
