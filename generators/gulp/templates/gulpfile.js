@@ -9,11 +9,23 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     uglify = require('gulp-uglify'),
     gzip = require('gulp-gzip'),
+    imagemin = require('gulp-imagemin'),
+    grev = require('gulp-rev'),
     del = require('del');
 
+var vendor_paths = {
+  sass:   [],
+  css:    [],
+  js:     [],
+  images: [],
+  fonts:  []
+};
+
 var paths = {
-  sass:   ['app/assets/css/*.scss'],
-  js:     ['app/assets/js/*.js'],
+  sass:   ['app/assets/css/**/*.scss'],
+  js:     ['app/assets/js/**/*.js'],
+  images: ['app/assets/images/*'],
+  fonts:  ['app/assets/fonts/*'],
   html:   ['app/**/*.html'],
   xml:    ['app/**/*.xml'],
   yml:    ['app/**/*.yml'],
@@ -24,7 +36,9 @@ var paths = {
   tmp:    '.jekyll_tmp/',
   dist:   '.dist/',
   dcss:   '.dist/assets/css/',
-  djs:    '.dist/assets/js/'
+  djs:    '.dist/assets/js/',
+  dfonts: '.dist/assets/fonts/',
+  dimages:'.dist/assets/images/',
 };
 
 gulp.task('clean', function() {
@@ -75,19 +89,25 @@ gulp.task('styles:prod', ['jekyll:prod'], function() {
              .pipe(concat('main.css'))
 	     .pipe(mincss())
 	     .pipe(gzip())
+	     .pipe(grev())
 	     .pipe(gulp.dest(paths.dcss));
 });
 
-gulp.task('lint', ['jekyll'], function() {
+gulp.task('lint', function() {
   return gulp.src(paths.js)
              .pipe(jshint())
              .pipe(jshint.reporter('default'));
 });
 
-gulp.task('lint:prod', ['jekyll:prod'], function() {
-  return gulp.src(paths.js)
-             .pipe(jshint())
-             .pipe(jshint.reporter('default'));
+gulp.task('fonts', function() {
+  return gulp.src(paths.fonts)
+             .pipe(gulp.dest(paths.dfonts));
+});
+
+gulp.task('images', function() {
+  return gulp.src(paths.images)
+	     .pipe(imagemin({ progressive: true }))
+	     .pipe(gulp.dest(paths.dimages));
 });
 
 gulp.task('scripts', ['jekyll'], function() {
@@ -102,6 +122,7 @@ gulp.task('scripts:prod', ['jekyll:prod'], function() {
              .pipe(concat('main.js'))
 	     .pipe(uglify())
 	     .pipe(gzip())
+	     .pipe(grev())
 	     .pipe(gulp.dest(paths.djs));
 });
 
@@ -122,7 +143,9 @@ gulp.task('build', [
   'styles',
   'scripts',
   'xml',
-  'lint'
+  'lint',
+  'fonts',
+  'images'
 ]);
 
 gulp.task('build:prod', [
@@ -130,7 +153,9 @@ gulp.task('build:prod', [
   'styles:prod',
   'scripts:prod',
   'xml:prod',
-  'lint:prod',
+  'lint',
+  'fonts',
+  'images'
 ]);
 
 gulp.task('serve', ['build'], function() {
@@ -143,18 +168,6 @@ gulp.task('serve', ['build'], function() {
   gulp.watch(paths.sass, ['styles']);
   gulp.watch(paths.js, ['scripts']);
   gulp.watch([paths.yml, paths.html, paths.md, paths.txt], ['build']);
-});
-
-gulp.task('serve:prod', ['build:prod'], function() {
-  browser_sync.init({
-    server: {
-      baseDir: paths.dist
-    }
-  });
-
-  gulp.watch(paths.sass, ['styles:prod']);
-  gulp.watch(paths.js, ['scripts:prod']);
-  gulp.watch([paths.yml, paths.html, paths.md, paths.txt], ['build:prod']);
 });
 
 gulp.task('default', ['serve']);
