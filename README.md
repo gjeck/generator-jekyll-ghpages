@@ -1,4 +1,5 @@
-# generator-jekyll-ghpages [![Build Status](https://secure.travis-ci.org/gjeck/generator-jekyll-ghpages.png?branch=master)](https://travis-ci.org/gjeck/generator-jekyll-ghpages)
+# generator-jekyll-ghpages
+[![Build Status](https://secure.travis-ci.org/gjeck/generator-jekyll-ghpages.png?branch=master)](https://travis-ci.org/gjeck/generator-jekyll-ghpages)
 
 > [Yeoman](http://yeoman.io) generator
 
