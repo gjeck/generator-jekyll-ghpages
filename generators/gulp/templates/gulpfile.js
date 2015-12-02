@@ -14,7 +14,7 @@ var gulp         = require('gulp'),
 
 /*
   Add all component paths from node, bower, etc, right here
-*/
+ */
 var vendor_paths = {
   scss:   [],
   js:     [],
@@ -31,6 +31,7 @@ var paths = {
   xml:    ['app/**/*.xml'],
   yml:    ['app/**/*.yml'],
   md:     ['app/**/*.md'],
+  mdown:  ['app/**/*.markdown'],
   txt:    ['app/**/*.txt'],
   jhtml:  ['.jekyll_tmp/**/*.html'],
   jxml:   ['.jekyll_tmp/**/*.xml'],
@@ -43,23 +44,29 @@ var paths = {
 };
 
 gulp.task('clean', function() {
-  return del([paths.tmp, paths.dist]);
+  return del([paths.dist]);
 });
 
-gulp.task('doctor', function(cb) {
+gulp.task('jekyll:doctor', function(cb) {
   shell.exec('bundle exec jekyll doctor', function(err) {
     return err ? cb(err) : cb();
   });
 });
 
-gulp.task('jekyll', ['clean', 'doctor'], function(cb) {
-  shell.exec('bundle exec jekyll build', function(err) {
+gulp.task('jekyll:clean', function(cb) {
+  shell.exec('bundle exec jekyll clean', function(err) {
+    return err ? cb(err) : cb();
+  })
+})
+
+gulp.task('jekyll', ['clean', 'jekyll:doctor'], function(cb) {
+  shell.exec('bundle exec jekyll build --incremental', function(err) {
     return err ? cb(err) : cb();
   });
 });
 
-gulp.task('jekyll:prod', ['clean', 'doctor'], function(cb) {
-  var command = 'bundle exec jekyll build --config _config.yml,_config.production.yml';
+gulp.task('jekyll:prod', ['clean', 'jekyll:doctor'], function(cb) {
+  var command = 'bundle exec jekyll build --config _config.yml,_config.production.yml --incremental';
   shell.exec(command, function(err) {
     return err ? cb(err) : cb();
   });
@@ -202,7 +209,11 @@ gulp.task('serve', ['build'], function() {
 
   gulp.watch(paths.scss, ['styles']);
   gulp.watch(paths.js, ['scripts']);
-  gulp.watch([paths.yml, paths.html, paths.md, paths.txt], ['build']);
+  gulp.watch([paths.yml, paths.html, paths.md, paths.txt, paths.mdown])
+      .on('change', function() {
+        gulp.run('build');
+        browser_sync.reload;
+      });
 });
 
 gulp.task('default', ['serve']);
