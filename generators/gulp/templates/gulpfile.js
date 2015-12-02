@@ -9,7 +9,10 @@ var gulp         = require('gulp'),
     jshint       = require('gulp-jshint'),
     uglify       = require('gulp-uglify'),
     gzip         = require('gulp-gzip'),
+    ginject      = require('gulp-inject'),
     imagemin     = require('gulp-imagemin'),
+    yaml         = require('js-yaml'),
+    fs           = require('fs'),
     del          = require('del');
 
 /*
@@ -36,6 +39,7 @@ var paths = {
   jhtml:  ['.jekyll_tmp/**/*.html'],
   jxml:   ['.jekyll_tmp/**/*.xml'],
   tmp:    '.jekyll_tmp/',
+  ymlprd: '_config.production.yml',
   dist:   '.dist/',
   dcss:   '.dist/assets/css/',
   djs:    '.dist/assets/js/',
@@ -58,6 +62,8 @@ gulp.task('jekyll:clean', function(cb) {
     return err ? cb(err) : cb();
   })
 })
+
+gulp.task('deepclean', ['clean', 'jekyll:clean']);
 
 gulp.task('jekyll', ['clean', 'jekyll:doctor'], function(cb) {
   shell.exec('bundle exec jekyll build --incremental', function(err) {
@@ -175,6 +181,24 @@ gulp.task('html:prod', ['jekyll:prod'], function() {
              .pipe(gzip())
              .pipe(gulp.dest(paths.dist));
 });
+
+gulp.task('inject', function(cb) {
+  var baseurl = '';
+  try {
+    var config = yaml.safeLoad(fs.readFileSync(paths.ymlprd, 'utf8'));
+    baseurl = config.baseurl;
+    var target = gulp.src(paths.dist + '**/*.html');
+    var source = gulp.src(paths.dcss + '*.css', { read: false });
+    var options = {
+      addPrefix: baseurl,
+      ignorePath: paths.dist
+    };
+    return target.pipe(ginject(source, options))
+                 .pipe(gulp.dest(paths.dist));
+  } catch (err) {
+    return cb(err);
+  }
+})
 
 gulp.task('build', [
   'html',
