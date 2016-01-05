@@ -175,20 +175,15 @@ gulp.task('vendor:scripts:prod', ['jekyll:prod'], function() {
              .pipe(gulp.dest(paths.djs));
 });
 
-gulp.task('inject', ['styles', 'scripts'], function(cb) {
-  try {
-    var config = yaml.safeLoad(fs.readFileSync(paths.ymldev, 'utf8'));
-    var target = gulp.src(paths.jhtml);
-    var source_paths = [paths.dcss + '*.css', paths.djs + '*.js'];
-    var source = gulp.src(source_paths, { read: false });
-    var options = {
-      ignorePath: paths.dist
-    };
-    return target.pipe(ginject(source, options))
-                 .pipe(gulp.dest(paths.tmp));
-  } catch (err) {
-    return cb(err);
-  }
+gulp.task('inject', ['styles', 'scripts'], function() {
+  var target = gulp.src(paths.jhtml);
+  var source_paths = [paths.dcss + '*.css', paths.djs + '*.js'];
+  var source = gulp.src(source_paths, { read: false });
+  var options = {
+    ignorePath: paths.dist
+  };
+  return target.pipe(ginject(source, options))
+               .pipe(gulp.dest(paths.tmp));
 });
 
 gulp.task('inject:prod', ['styles:prod', 'scripts:prod'], function(cb) {
@@ -211,7 +206,7 @@ gulp.task('inject:prod', ['styles:prod', 'scripts:prod'], function(cb) {
 
 gulp.task('html', ['jekyll', 'inject'], function() {
   return gulp.src(paths.jhtml)
-             .pipe(gulp.dest(paths.dist))
+             .pipe(gulp.dest(paths.dist));
 });
 
 gulp.task('html:prod', ['jekyll:prod', 'inject:prod'], function() {
