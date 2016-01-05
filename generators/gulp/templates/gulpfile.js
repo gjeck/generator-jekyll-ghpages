@@ -13,7 +13,8 @@ var gulp         = require('gulp'),
     yaml         = require('js-yaml'),
     fs           = require('fs'),
     del          = require('del'),
-    gchanged     = require('gulp-changed');
+    gchanged     = require('gulp-changed'),
+    gh_pages     = require('gulp-gh-pages');
 
 var paths = {
   scss:   ['app/assets/css/**/*.scss'],
@@ -34,6 +35,7 @@ var paths = {
   djs:    '.dist/assets/js/',
   dfonts: '.dist/assets/fonts/',
   dimages:'.dist/assets/images/',
+  dall:   '.dist/**/*',
 };
 
 var vendor_paths = {
@@ -265,3 +267,9 @@ gulp.task('serve', ['build'], function() {
 });
 
 gulp.task('default', ['serve']);
+
+var deploy_branch = '<%= branch_name %>';
+gulp.task('deploy', ['build:prod'], function() {
+  return gulp.src(paths.dall)
+             .pipe(gh_pages({ branch: deploy_branch }));
+});

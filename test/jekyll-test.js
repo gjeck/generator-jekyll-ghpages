@@ -4,8 +4,8 @@ var path = require('path');
 var assert = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
 
-describe('jekyll-ghpages:jekyll', function () {
-  before(function (done) {
+describe('jekyll-ghpages:jekyll', function() {
+  before(function(done) {
     helpers.run(path.join(__dirname, '../generators/jekyll'))
       .withOptions({
         project_title: 'test',
@@ -15,7 +15,7 @@ describe('jekyll-ghpages:jekyll', function () {
       .on('end', done);
   });
 
-  it('creates files', function () {
+  it('creates files', function() {
     assert.file([
       'Gemfile',
       'app',
@@ -24,7 +24,7 @@ describe('jekyll-ghpages:jekyll', function () {
     ]);
   });
 
-  it('adds baseurl to _config.production.yml', function () {
+  it('adds baseurl to _config.production.yml', function() {
     assert.fileContent('_config.production.yml', /baseurl: \/test-repo/);
   });
 });

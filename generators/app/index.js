@@ -8,7 +8,7 @@ var _ = require('lodash');
 
 module.exports = yeoman.generators.Base.extend({
 
-  constructor: function () {
+  constructor: function() {
     yeoman.generators.Base.apply(this, arguments);
 
     this.option('skip-install', {
@@ -17,11 +17,11 @@ module.exports = yeoman.generators.Base.extend({
     });
   },
 
-  initializing: function () {
+  initializing: function() {
     this.props = {};
   },
 
-  prompting: function () {
+  prompting: function() {
     var done = this.async();
 
     this.log(yosay(
@@ -75,7 +75,7 @@ module.exports = yeoman.generators.Base.extend({
       choices: ['pretty', 'date', 'none']
     }];
 
-    this.prompt(prompts, function (props) {
+    this.prompt(prompts, function(props) {
       this.props = _.extend(this.props, props);
       this.props.project_title_slug = _.kebabCase(props.project_title);
       if (props.create_cname) {
@@ -86,7 +86,7 @@ module.exports = yeoman.generators.Base.extend({
     }.bind(this));
   },
 
-  authorPrompting: function () {
+  authorPrompting: function() {
     var done = this.async();
 
     this.log(chalk.yellow('\nNow tell me a bit about yourself. '));
@@ -113,14 +113,14 @@ module.exports = yeoman.generators.Base.extend({
       message: 'Your twitter handle:'
     }];
 
-    this.prompt(prompts, function (props) {
+    this.prompt(prompts, function(props) {
       this.props = _.extend(this.props, props);
       done();
     }.bind(this));
   },
 
   writing: {
-    projectfiles: function () {
+    projectfiles: function() {
       this.fs.copyTpl(
         this.templatePath('_package.json'),
         this.destinationPath('package.json'),
@@ -171,7 +171,7 @@ module.exports = yeoman.generators.Base.extend({
     });
   },
 
-  install: function () {
+  install: function() {
     this.installDependencies({
       skipInstall: this.options['skip-install']
     });
