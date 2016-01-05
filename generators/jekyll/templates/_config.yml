@@ -10,6 +10,10 @@ author:
   github: <%= author_github %>
   twitter: <%= author_twitter %>
 
+vendor:
+  scss_paths: []
+  js_paths: []
+
 host: 127.0.0.1
 port: 4000
 baseurl: ''

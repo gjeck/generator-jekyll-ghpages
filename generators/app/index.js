@@ -164,6 +164,11 @@ module.exports = yeoman.generators.Base.extend({
         author_twitter: this.props.author_twitter
       },
     });
+    this.composeWith('jekyll-ghpages:gulp', {
+      options: {
+        gh_page_type: this.props.gh_page_type
+      },
+    });
   },
 
   install: function () {
