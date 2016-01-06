@@ -3,8 +3,8 @@ var gulp         = require('gulp'),
     browser_sync = require('browser-sync').create(),
     shell        = require('shelljs'),
     sass         = require('gulp-sass'),
-    mincss       = require('gulp-minify-css'),
-    minhtml      = require('gulp-minify-html'),
+    mincss       = require('gulp-cssnano'),
+    minhtml      = require('gulp-htmlmin'),
     concat       = require('gulp-concat'),
     jshint       = require('gulp-jshint'),
     uglify       = require('gulp-uglify'),
@@ -213,7 +213,12 @@ gulp.task('html', ['jekyll', 'inject'], function() {
 
 gulp.task('html:prod', ['jekyll:prod', 'inject:prod'], function() {
   return gulp.src(paths.jhtml)
-             .pipe(minhtml())
+             .pipe(minhtml({
+               removeComments: true,
+               collapseWhitespace: true,
+               collapseBooleanAttributes: true,
+               removeRedundantAttributes: true
+             }))
              .pipe(gulp.dest(paths.dist));
 });
 
