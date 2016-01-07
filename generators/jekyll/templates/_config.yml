@@ -1,14 +1,18 @@
 ## Local Settings ##
 
-title: <%= project_title %>
-description: <%= project_description %>
+title: '<%= project_title %>'
+description: '<%= project_description %>'
 
 author:
-  name: <%= author_name %>
-  email: <%= author_email %>
-  bio: <%= author_bio %>
-  github: <%= author_github %>
-  twitter: <%= author_twitter %>
+  name: '<%= author_name %>'
+  email: '<%= author_email %>'
+  bio: '<%= author_bio %>'
+  github: '<%= author_github %>'
+  twitter: '<%= author_twitter %>'
+
+vendor:
+  scss_paths: []
+  js_paths: []
 
 host: 127.0.0.1
 port: 4000
@@ -19,7 +23,7 @@ destination: .jekyll_tmp
 
 markdown: kramdown
 
-permalink: <%= jekyll_permalinks %>
+permalink: '<%= jekyll_permalinks %>'
 paginate: 10
 paginate_path: 'page:num'
 excerpt_separator: '<!--more-->'

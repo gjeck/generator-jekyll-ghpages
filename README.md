@@ -39,6 +39,15 @@ To run tests run:
 npm test
 ```
 
+It can be helpful to install and run integration tests on the package locally. To do so run:
+```bash
+npm pack
+```
+This will generate a `.tgz` file which can then be installed by running:
+```bash
+npm install path/to/package.tgz
+```
+
 ## License
 
 MIT

@@ -3,8 +3,8 @@ var gulp         = require('gulp'),
     browser_sync = require('browser-sync').create(),
     shell        = require('shelljs'),
     sass         = require('gulp-sass'),
-    mincss       = require('gulp-minify-css'),
-    minhtml      = require('gulp-minify-html'),
+    mincss       = require('gulp-cssnano'),
+    minhtml      = require('gulp-htmlmin'),
     concat       = require('gulp-concat'),
     jshint       = require('gulp-jshint'),
     uglify       = require('gulp-uglify'),
@@ -13,7 +13,8 @@ var gulp         = require('gulp'),
     yaml         = require('js-yaml'),
     fs           = require('fs'),
     del          = require('del'),
-    gchanged     = require('gulp-changed');
+    gchanged     = require('gulp-changed'),
+    gh_pages     = require('gulp-gh-pages');
 
 var paths = {
   scss:   ['app/assets/css/**/*.scss'],
@@ -34,6 +35,7 @@ var paths = {
   djs:    '.dist/assets/js/',
   dfonts: '.dist/assets/fonts/',
   dimages:'.dist/assets/images/',
+  dall:   '.dist/**/*',
 };
 
 var vendor_paths = {
@@ -211,7 +213,12 @@ gulp.task('html', ['jekyll', 'inject'], function() {
 
 gulp.task('html:prod', ['jekyll:prod', 'inject:prod'], function() {
   return gulp.src(paths.jhtml)
-             .pipe(minhtml())
+             .pipe(minhtml({
+               removeComments: true,
+               collapseWhitespace: true,
+               collapseBooleanAttributes: true,
+               removeRedundantAttributes: true
+             }))
              .pipe(gulp.dest(paths.dist));
 });
 
@@ -265,3 +272,9 @@ gulp.task('serve', ['build'], function() {
 });
 
 gulp.task('default', ['serve']);
+
+var deploy_branch = '<%= branch_name %>';
+gulp.task('deploy', ['build:prod'], function() {
+  return gulp.src(paths.dall)
+             .pipe(gh_pages({ branch: deploy_branch }));
+});

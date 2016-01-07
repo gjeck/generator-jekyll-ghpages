@@ -2,7 +2,7 @@
 var yeoman = require('yeoman-generator');
 
 module.exports = yeoman.generators.Base.extend({
-  initializing: function () {
+  initializing: function() {
     this.option('project_name', {
       type: String,
       required: true,
@@ -61,7 +61,7 @@ module.exports = yeoman.generators.Base.extend({
     this._adjust_gh_repo_name();
   },
 
-  _adjust_gh_repo_name: function () {
+  _adjust_gh_repo_name: function() {
     if (this.options.gh_repo_name) {
       this.options.gh_repo_name = '/' + this.options.gh_repo_name;
     } else {
@@ -69,7 +69,7 @@ module.exports = yeoman.generators.Base.extend({
     }
   },
 
-  writing: function () {
+  writing: function() {
     this.fs.copy(
       this.templatePath('Gemfile'),
       this.destinationPath('Gemfile')

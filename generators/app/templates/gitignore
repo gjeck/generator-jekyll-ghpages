@@ -1,3 +1,7 @@
+### Jekyll-Ghpages ###
+.jekyll_tmp/
+.dist/
+
 ### Jekyll ###
 _site/
 _deploy/
@@ -39,5 +43,3 @@ bower_components
 .bower-cache
 .bower-registry
 .bower-tmp
-
-

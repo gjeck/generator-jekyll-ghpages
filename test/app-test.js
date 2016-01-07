@@ -23,6 +23,7 @@ describe('jekyll-ghpages:app', function () {
       })
       .withGenerators([
         [helpers.createDummyGenerator(), 'jekyll-ghpages:jekyll'],
+        [helpers.createDummyGenerator(), 'jekyll-ghpages:gulp'],
       ])
       .on('end', done);
   });
