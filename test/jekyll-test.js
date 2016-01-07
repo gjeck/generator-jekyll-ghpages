@@ -25,6 +25,6 @@ describe('jekyll-ghpages:jekyll', function() {
   });
 
   it('adds baseurl to _config.production.yml', function() {
-    assert.fileContent('_config.production.yml', /baseurl: \/test-repo/);
+    assert.fileContent('_config.production.yml', /baseurl: '\/test-repo'/);
   });
 });
