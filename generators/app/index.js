@@ -28,6 +28,89 @@ module.exports = yeoman.generators.Base.extend({
       'Welcome to the ' + chalk.red('JekyllGhpages') + ' generator!'
     ));
 
+    this.log(chalk.yellow('Let\'s get you a website up on github.\n' +
+    'Learn more at https://pages.github.com/\n') +
+    'First I\'m going to ask you a bunch of questions and I want them\n' +
+    'answered immediately'
+    );
+
+    var prompts = [{
+      type: 'input',
+      name: 'gh_user_name',
+      message: 'What is your github username?'
+    }, {
+      type: 'list',
+      name: 'gh_page_type',
+      message: 'What type of github pages project is this?',
+      choices: ['user', 'project', 'organization']
+    }, {
+      type: 'input',
+      name: 'gh_org_name',
+      message: 'What is the organization name?',
+      when: function(props) {
+        return props.gh_page_type === 'organization';
+      }
+    }, {
+      type: 'input',
+      name: 'gh_repo_name',
+      message: 'Enter the name of your Github repo',
+      when: function(props) {
+        return (/project|organization/i).test(props.gh_page_type);
+      }
+    }, {
+      type: 'confirm',
+      name: 'gh_should_create',
+      message: 'Do you want to create your repo with this generator?',
+      default: 'Y/n'
+    }, {
+      type: 'password',
+      name: 'gh_password',
+      message: 'Enter your github password',
+      when: function(props) {
+        return props.gh_should_create;
+      }
+    }, {
+      type: 'confirm',
+      name: 'create_cname',
+      message: 'Do you want to use a custom domain?',
+      default: 'Y/n'
+    }, {
+      type: 'input',
+      name: 'project_url',
+      message: 'Enter custom domain (e.g. www.mysite.com)',
+      when: function(props) {
+        return props.create_cname;
+      }
+    }];
+
+    this.prompt(prompts, function(props) {
+      this.props = _.extend(this.props, props);
+      this.props.project_homepage = this._githubProjectURL(
+        props.gh_user_name,
+        props.gh_org_name,
+        props.gh_repo_name
+      );
+      if (props.create_cname) {
+          this.props.project_url = props.project_url;
+      }
+
+      done();
+    }.bind(this));
+  },
+
+  _githubProjectURL: function(username, org, repo) {
+    var baseURL = 'https://github.com',
+        potentials = [username, org, repo],
+        toAdd = _.filter(potentials, function(v) { return v; });
+
+    return _.reduce(toAdd, function(total, add) {
+      return total + '/' + add;
+    }, baseURL);
+  },
+
+  projectPrompting: function() {
+    var done = this.async();
+
     var prompts = [{
       type: 'input',
       name: 'project_title',
@@ -36,36 +119,19 @@ module.exports = yeoman.generators.Base.extend({
       type: 'input',
       name: 'project_description',
       message: 'Describe your project for me:'
-    }, {
-      type: 'input',
-      name: 'project_homepage',
-      message: 'Enter homepage for project (e.g github repo url)'
-    }, {
-      type: 'confirm',
-      name: 'create_cname',
-      message: 'Will you use a custom domain?',
-      default: 'Y/n'
-    }, {
-      type: 'input',
-      name: 'project_url',
-      message: 'Enter custom domain (project url)',
-      when: function(props) {
-        return props.create_cname;
-      }
-    }, {
-      type: 'list',
-      name: 'gh_page_type',
-      message: 'What type of github pages project is this?' +
-               chalk.yellow('\n  learn more at https://pages.github.com/'),
-      choices: ['user', 'project']
-    }, {
-      type: 'input',
-      name: 'gh_repo_name',
-      message: 'Enter the name of your Github repo',
-      when: function(props) {
-        return (/project/i).test(props.gh_page_type);
-      }
-    }, {
+    }];
+
+    this.prompt(prompts, function(props) {
+      this.props = _.extend(this.props, props);
+      this.props.project_title_slug = _.kebabCase(props.project_title);
+      done();
+    }.bind(this));
+  },
+
+  jekyllPrompting: function() {
+    var done = this.async();
+
+    var prompts = [ {
       type: 'list',
       name: 'jekyll_permalinks',
       message: 'Permalink style' + (chalk.yellow(
@@ -77,11 +143,6 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function(props) {
       this.props = _.extend(this.props, props);
-      this.props.project_title_slug = _.kebabCase(props.project_title);
-      if (props.create_cname) {
-          this.props.project_url = props.project_url;
-      }
-
       done();
     }.bind(this));
   },
@@ -103,10 +164,6 @@ module.exports = yeoman.generators.Base.extend({
       type: 'input',
       name: 'author_bio',
       message: 'Write a short description of yourself:'
-    }, {
-      type: 'input',
-      name: 'author_github',
-      message: 'Your github handle:'
     }, {
       type: 'input',
       name: 'author_twitter',
@@ -160,7 +217,7 @@ module.exports = yeoman.generators.Base.extend({
         author_name: this.props.author_name,
         author_email: this.props.author_email,
         author_bio: this.props.author_bio,
-        author_github: this.props.author_github,
+        author_github: this.props.gh_user_name,
         author_twitter: this.props.author_twitter
       },
     });
@@ -176,7 +233,7 @@ module.exports = yeoman.generators.Base.extend({
       skipInstall: this.options['skip-install']
     });
     if (!this.options['skip-install']) {
-        this.spawnCommand('bundle', ['install']);
+      this.spawnCommand('bundle', ['install']);
     }
   }
 });
