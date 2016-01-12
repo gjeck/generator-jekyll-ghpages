@@ -6,13 +6,14 @@ module.exports = yeoman.generators.Base.extend({
     this.option('gh_page_type', {
       type: String,
       required: true,
-      desc: 'Github page type (user or project)'
+      desc: 'Github page type (user, organization, or project)'
     });
     this._set_branch_option();
   },
 
   _set_branch_option: function() {
-    this.options.branch_name = this.options.gh_page_type === 'user' ? 'master' : 'gh-pages';
+    var is_user_or_org = (/user|organization/i).test(this.options.gh_page_type);
+    this.options.branch_name = is_user_or_org ? 'master' : 'gh-pages';
   },
 
   writing: function() {
