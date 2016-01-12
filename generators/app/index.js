@@ -29,9 +29,9 @@ module.exports = yeoman.generators.Base.extend({
     ));
 
     this.log(chalk.yellow('Let\'s get you a website up on github.\n' +
-    'Learn more at https://pages.github.com/\n') +
+    'Learn more at https://pages.github.com/\n\n') +
     'First I\'m going to ask you a bunch of questions and I want them\n' +
-    'answered immediately'
+    'answered immediately\n'
     );
 
     var prompts = [{
