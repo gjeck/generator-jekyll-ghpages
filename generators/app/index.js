@@ -63,11 +63,26 @@ module.exports = yeoman.generators.Base.extend({
       message: 'Do you want to create your repo with this generator?',
       default: 'Y/n'
     }, {
+      type: 'list',
+      name: 'gh_auth_type',
+      message: 'How do you want to authenticate on github?',
+      choices: ['auth_password', 'auth_token'],
+      when: function(props) {
+        return props.gh_should_create;
+      }
+    }, {
       type: 'password',
       name: 'gh_password',
       message: 'Enter your github password',
       when: function(props) {
-        return props.gh_should_create;
+        return props.gh_auth_type === 'auth_password';
+      }
+    }, {
+      type: 'token',
+      name: 'gh_access_token',
+      message: 'Enter a github access token',
+      when: function(props) {
+        return props.gh_auth_type === 'auth_token';
       }
     }, {
       type: 'confirm',
@@ -234,8 +249,12 @@ module.exports = yeoman.generators.Base.extend({
       this.composeWith('jekyll-ghpages:github', {
         gh_user_name: this.props.gh_user_name,
         gh_page_type: this.props.gh_page_type,
+        gh_auth_type: this.props.gh_auth_type,
+        gh_repo_name: this.props.gh_repo_name,
         gh_org_name: this.props.gh_org_name,
-        gh_password: this.props.gh_password
+        gh_password: this.props.gh_password,
+        gh_access_token: this.props.gh_access_token,
+        project_description: this.props.project_description
       });
     }
   },
