@@ -39,7 +39,7 @@ describe('jekyll-ghpages:gulp', function() {
         .on('end', done);
     });
 
-    it('sets the deploy branch to master', function() {
+    it('sets the deploy branch to gh-pages', function() {
       assert.fileContent('gulpfile.js', /var deploy_branch = 'gh-pages'/);
     });
   });
