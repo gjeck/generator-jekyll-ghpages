@@ -20,7 +20,6 @@ describe('jekyll-ghpages:app', function() {
         author_name: 'tester',
         author_email: 'tester@test.com',
         author_bio: 'I love tests',
-        author_github: 'tester',
       })
       .withGenerators([
         [helpers.createDummyGenerator(), 'jekyll-ghpages:jekyll'],
@@ -44,10 +43,39 @@ describe('jekyll-ghpages:app', function() {
     assert.fileContent('CNAME', /www\.testdomain\.com/);
   });
 
-  it('creates a correct github homepage url', function() {
-    var user = this.app.generator.props.gh_user_name,
-        test_homepage = this.app.generator.props.project_homepage,
-        expected = 'https://github.com/' + user + '/' + user + '.github.io';
-    assert.equal(test_homepage, expected);
+  describe('user', function() {
+    it('creates a correct github homepage url', function() {
+      var user = this.app.generator.props.gh_user_name,
+          test_homepage = this.app.generator.props.project_homepage,
+          expected = 'https://github.com/' + user + '/' + user + '.github.io';
+      assert.equal(test_homepage, expected);
+    });
   });
+
+  describe('project/org', function() {
+    before(function(done) {
+      this.app = helpers.run(path.join(__dirname, '../generators/app'))
+        .withOptions({ skipInstall: true })
+        .withPrompts({
+          gh_user_name: 'gob_bluth',
+          gh_page_type: 'project',
+          gh_repo_name: 'magic'
+        })
+        .withGenerators([
+          [helpers.createDummyGenerator(), 'jekyll-ghpages:jekyll'],
+          [helpers.createDummyGenerator(), 'jekyll-ghpages:gulp'],
+          [helpers.createDummyGenerator(), 'jekyll-ghpages:github']
+        ])
+        .on('end', done);
+    });
+
+    it('creates a correct github homepage url', function() {
+      var user = this.app.generator.props.gh_user_name,
+          repo = this.app.generator.props.gh_repo_name,
+          test_homepage = this.app.generator.props.project_homepage,
+          expected = 'https://github.com/' + user + '/' + repo;
+      assert.equal(test_homepage, expected);
+    });
+  });
+
 });
