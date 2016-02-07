@@ -1,7 +1,7 @@
 'use strict';
 
-var yeoman = require('yeoman-generator');
-var github = require('octonode');
+var yeoman = require('yeoman-generator'),
+    github = require('octonode');
 
 module.exports = yeoman.generators.Base.extend({
   initializing: function() {
@@ -45,6 +45,7 @@ module.exports = yeoman.generators.Base.extend({
       required: false,
       desc: 'Access token'
     });
+    this.options.gh_logs = [];
   },
 
   createRepo: function() {
@@ -55,10 +56,13 @@ module.exports = yeoman.generators.Base.extend({
     } else {
       gh = client.org(this.options.gh_org_name);
     }
+    var self = this;
     gh.repo({
       'name': this.options.gh_repo_name,
       'description': this.options.project_description
-    }, this._logResult);
+    }, function(data) {
+      self.options.gh_logs.push(data);
+    });
   },
 
   _getClient: function() {
@@ -73,10 +77,6 @@ module.exports = yeoman.generators.Base.extend({
       default :
         break;
     }
-  },
-
-  _logResult: function(data) {
-    console.log(data);
   },
 
 });

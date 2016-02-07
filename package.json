@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "mocha-jshint": "^2.2.3"
+    "mocha-jshint": "^2.2.3",
+    "proxyquire": "^1.7.4"
   }
 }
