@@ -85,6 +85,10 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function(props) {
       this.props = _.extend(this.props, props);
+      if (this.props.gh_page_type === 'user') {
+        props.gh_repo_name = this.props.gh_user_name + '.github.io';
+        this.props.gh_repo_name = props.gh_repo_name;
+      }
       this.props.project_homepage = this._githubProjectURL(
         props.gh_user_name,
         props.gh_org_name,
@@ -226,6 +230,14 @@ module.exports = yeoman.generators.Base.extend({
         gh_page_type: this.props.gh_page_type
       },
     });
+    if (/y/i.test(this.props.gh_should_create)) {
+      this.composeWith('jekyll-ghpages:github', {
+        gh_user_name: this.props.gh_user_name,
+        gh_page_type: this.props.gh_page_type,
+        gh_org_name: this.props.gh_org_name,
+        gh_password: this.props.gh_password
+      });
+    }
   },
 
   install: function() {
