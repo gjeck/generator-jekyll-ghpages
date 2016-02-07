@@ -7,9 +7,6 @@ var helpers = require('yeoman-generator').test;
 describe('jekyll-ghpages:gulp', function() {
   before(function(done) {
     helpers.run(path.join(__dirname, '../generators/gulp'))
-      .withOptions({
-        gh_page_type: 'user',
-       })
       .on('end', done);
   });
 
@@ -19,7 +16,32 @@ describe('jekyll-ghpages:gulp', function() {
     ]);
   });
 
-  it('sets the deploy branch to master', function() {
-    assert.fileContent('gulpfile.js', /var deploy_branch = 'master'/);
+  describe('user', function() {
+    before(function(done) {
+      helpers.run(path.join(__dirname, '../generators/gulp'))
+        .withOptions({
+          gh_page_type: 'user',
+         })
+        .on('end', done);
+    });
+
+    it('sets the deploy branch to master', function() {
+      assert.fileContent('gulpfile.js', /var deploy_branch = 'master'/);
+    });
   });
+
+  describe('project/org', function() {
+    before(function(done) {
+      helpers.run(path.join(__dirname, '../generators/gulp'))
+        .withOptions({
+          gh_page_type: 'project',
+         })
+        .on('end', done);
+    });
+
+    it('sets the deploy branch to master', function() {
+      assert.fileContent('gulpfile.js', /var deploy_branch = 'gh-pages'/);
+    });
+  });
+
 });
