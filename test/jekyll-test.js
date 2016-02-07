@@ -1,8 +1,8 @@
 'use strict';
 
-var path = require('path');
-var assert = require('yeoman-generator').assert;
-var helpers = require('yeoman-generator').test;
+var path = require('path'),
+    assert = require('yeoman-generator').assert,
+    helpers = require('yeoman-generator').test;
 
 describe('jekyll-ghpages:jekyll', function() {
   before(function(done) {

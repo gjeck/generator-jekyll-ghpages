@@ -1,11 +1,35 @@
 'use strict';
 
-var path = require('path');
-var assert = require('yeoman-generator').assert;
-var helpers = require('yeoman-generator').test;
+var proxyquire = require('proxyquire'),
+    path = require('path'),
+    assert = require('yeoman-generator').assert,
+    helpers = require('yeoman-generator').test;
 
 describe('jekyll-ghpages:github', function() {
   before(function(done) {
+    var gh_instance_stub = {
+      token: '',
+      repo: function(opts, cb) {
+        cb(opts);
+      }
+    };
+    var gh_client_stub = {
+      token: '',
+      me: function() {
+        return gh_instance_stub;
+      },
+      org: function(token) {
+        gh_instance_stub.token = token;
+        return gh_instance_stub;
+      }
+    };
+    var gh_stub = {
+      client: function(token) {
+        gh_client_stub.token = token;
+        return gh_client_stub;
+      },
+    };
+    proxyquire('../generators/github', { 'octonode': gh_stub });
     this.app = helpers.run(path.join(__dirname, '../generators/github'))
       .withOptions({
         gh_user_name: 'gob',
@@ -18,8 +42,11 @@ describe('jekyll-ghpages:github', function() {
       .on('end', done);
   });
 
-  it('creates files', function() {
-    assert(this.app.options.gh_page_type === 'project');
+  it('authenticates on github with a password', function() {
+    var expected = [
+      { 'name': 'magic', 'description': 'I did it! I sunk the yacht!' }
+    ];
+    assert.deepEqual(this.app.generator.options.gh_logs, expected);
   });
 
 });

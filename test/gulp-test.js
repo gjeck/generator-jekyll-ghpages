@@ -1,8 +1,8 @@
 'use strict';
 
-var path = require('path');
-var assert = require('yeoman-generator').assert;
-var helpers = require('yeoman-generator').test;
+var path = require('path'),
+    assert = require('yeoman-generator').assert,
+    helpers = require('yeoman-generator').test;
 
 describe('jekyll-ghpages:gulp', function() {
   before(function(done) {
@@ -39,7 +39,7 @@ describe('jekyll-ghpages:gulp', function() {
         .on('end', done);
     });
 
-    it('sets the deploy branch to master', function() {
+    it('sets the deploy branch to gh-pages', function() {
       assert.fileContent('gulpfile.js', /var deploy_branch = 'gh-pages'/);
     });
   });
