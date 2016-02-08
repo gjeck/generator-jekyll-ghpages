@@ -129,6 +129,8 @@ module.exports = yeoman.generators.Base.extend({
   projectPrompting: function() {
     var done = this.async();
 
+    this.log(chalk.yellow('\nNow tell me about your project. '));
+
     var prompts = [{
       type: 'input',
       name: 'project_title',
@@ -244,16 +246,18 @@ module.exports = yeoman.generators.Base.extend({
         gh_page_type: this.props.gh_page_type
       },
     });
-    if (/y/i.test(this.props.gh_should_create)) {
+    if (this.props.gh_should_create) {
       this.composeWith('jekyll-ghpages:github', {
-        gh_user_name: this.props.gh_user_name,
-        gh_page_type: this.props.gh_page_type,
-        gh_auth_type: this.props.gh_auth_type,
-        gh_repo_name: this.props.gh_repo_name,
-        gh_org_name: this.props.gh_org_name,
-        gh_password: this.props.gh_password,
-        gh_access_token: this.props.gh_access_token,
-        project_description: this.props.project_description
+        options: {
+          gh_user_name: this.props.gh_user_name,
+          gh_page_type: this.props.gh_page_type,
+          gh_auth_type: this.props.gh_auth_type,
+          gh_repo_name: this.props.gh_repo_name,
+          gh_org_name: this.props.gh_org_name,
+          gh_password: this.props.gh_password,
+          gh_access_token: this.props.gh_access_token,
+          project_description: this.props.project_description
+        },
       });
     }
   },

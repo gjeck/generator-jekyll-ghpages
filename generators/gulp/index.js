@@ -3,12 +3,17 @@
 var yeoman = require('yeoman-generator');
 
 module.exports = yeoman.generators.Base.extend({
-  initializing: function() {
+  constructor: function() {
+    yeoman.generators.Base.apply(this, arguments);
+
     this.option('gh_page_type', {
       type: String,
       required: true,
       desc: 'Github page type (user, organization, or project)'
     });
+  },
+
+  initializing: function() {
     this._set_branch_option();
   },
 

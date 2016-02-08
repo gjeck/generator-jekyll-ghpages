@@ -10,7 +10,10 @@ describe('jekyll-ghpages:github', function() {
     var gh_instance_stub = {
       token: '',
       repo: function(opts, cb) {
-        cb(opts);
+        var error;
+        var data = opts;
+        var headers;
+        cb(error, data, headers);
       }
     };
     var gh_client_stub = {
