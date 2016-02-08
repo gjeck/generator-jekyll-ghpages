@@ -65,12 +65,12 @@ module.exports = yeoman.generators.Base.extend({
       gh = client.org(this.options.gh_org_name);
     }
     gh.repo({
-      'name': this.options.gh_repo_name,
-      'description': this.options.project_description
+      name: this.options.gh_repo_name,
+      description: this.options.project_description
     }, function(err, data, headers) {
       if (err) {
         this.options.gh_logs.push(err);
-        this._errorRetryPrompts(err);
+        this._errorExit(err);
       }
       if (data) {
         this.options.gh_logs.push(data);
@@ -84,9 +84,9 @@ module.exports = yeoman.generators.Base.extend({
 
   _getClient: function() {
     switch(this.options.gh_auth_type) {
-      case 'auth_password':
-        return github.client(this.options.gh_access_token);
       case 'auth_token':
+        return github.client(this.options.gh_access_token);
+      case 'auth_password':
         return github.client({
           username: this.options.gh_user_name,
           password: this.options.gh_password
@@ -96,7 +96,7 @@ module.exports = yeoman.generators.Base.extend({
     }
   },
 
-  _errorRetryPrompts: function(err) {
+  _errorExit: function(err) {
     this.log(chalk.red('\nDang, github came back with an error.\n' +
     'Please run the generator again to retry'
     ));

@@ -68,7 +68,9 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   _adjust_gh_repo_name: function() {
-    if (this.options.gh_repo_name) {
+    if (this.options.gh_page_type === 'user') {
+      this.options.gh_repo_name = '';
+    } else if (this.options.gh_repo_name) {
       this.options.gh_repo_name = '/' + this.options.gh_repo_name;
     } else {
       this.options.gh_repo_name = '';
