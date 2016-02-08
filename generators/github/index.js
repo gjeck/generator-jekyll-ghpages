@@ -1,10 +1,13 @@
 'use strict';
 
 var yeoman = require('yeoman-generator'),
-    github = require('octonode');
+    github = require('octonode'),
+    chalk = require('chalk');
 
 module.exports = yeoman.generators.Base.extend({
-  initializing: function() {
+  constructor: function() {
+    yeoman.generators.Base.apply(this, arguments);
+
     this.option('gh_user_name', {
       type: String,
       required: true,
@@ -45,10 +48,15 @@ module.exports = yeoman.generators.Base.extend({
       required: false,
       desc: 'Access token'
     });
+  },
+
+  initializing: function() {
     this.options.gh_logs = [];
   },
 
   createRepo: function() {
+    var done = this.async();
+
     var client = this._getClient();
     var gh;
     if ((/user|project/i).test(this.options.gh_page_type)) {
@@ -56,20 +64,29 @@ module.exports = yeoman.generators.Base.extend({
     } else {
       gh = client.org(this.options.gh_org_name);
     }
-    var self = this;
     gh.repo({
-      'name': this.options.gh_repo_name,
-      'description': this.options.project_description
-    }, function(data) {
-      self.options.gh_logs.push(data);
-    });
+      name: this.options.gh_repo_name,
+      description: this.options.project_description
+    }, function(err, data, headers) {
+      if (err) {
+        this.options.gh_logs.push(err);
+        this._errorExit(err);
+      }
+      if (data) {
+        this.options.gh_logs.push(data);
+      }
+      if (headers) {
+        this.options.gh_logs.push(headers);
+      }
+      done();
+    }.bind(this));
   },
 
   _getClient: function() {
     switch(this.options.gh_auth_type) {
-      case 'auth_password':
-        return github.client(this.options.gh_access_token);
       case 'auth_token':
+        return github.client(this.options.gh_access_token);
+      case 'auth_password':
         return github.client({
           username: this.options.gh_user_name,
           password: this.options.gh_password
@@ -77,6 +94,13 @@ module.exports = yeoman.generators.Base.extend({
       default :
         break;
     }
+  },
+
+  _errorExit: function(err) {
+    this.log(chalk.red('\nDang, github came back with an error.\n' +
+    'Please run the generator again to retry'
+    ));
+    this.env.error(err);
   },
 
 });

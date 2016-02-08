@@ -3,7 +3,9 @@
 var yeoman = require('yeoman-generator');
 
 module.exports = yeoman.generators.Base.extend({
-  initializing: function() {
+  constructor: function() {
+    yeoman.generators.Base.apply(this, arguments);
+
     this.option('project_name', {
       type: String,
       required: true,
@@ -59,11 +61,16 @@ module.exports = yeoman.generators.Base.extend({
       required: true,
       desc: 'Author Twitter profile'
     });
+  },
+
+  initializing: function() {
     this._adjust_gh_repo_name();
   },
 
   _adjust_gh_repo_name: function() {
-    if (this.options.gh_repo_name) {
+    if (this.options.gh_page_type === 'user') {
+      this.options.gh_repo_name = '';
+    } else if (this.options.gh_repo_name) {
       this.options.gh_repo_name = '/' + this.options.gh_repo_name;
     } else {
       this.options.gh_repo_name = '';
