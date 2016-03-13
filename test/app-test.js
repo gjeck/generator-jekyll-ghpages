@@ -1,8 +1,8 @@
 'use strict';
 
 var path = require('path'),
-    assert = require('yeoman-generator').assert,
-    helpers = require('yeoman-generator').test;
+    assert = require('yeoman-assert'),
+    helpers = require('yeoman-test');
 
 describe('jekyll-ghpages:app', function() {
   beforeEach(function(done) {
@@ -15,7 +15,7 @@ describe('jekyll-ghpages:app', function() {
         project_url: 'www.testdomain.com',
         gh_user_name: 'gob_bluth',
         gh_page_type: 'user',
-        gh_should_create: 'n',
+        gh_should_create: false,
         jekyll_permalinks: 'pretty',
         author_name: 'tester',
         author_email: 'tester@test.com',
@@ -57,6 +57,7 @@ describe('jekyll-ghpages:app', function() {
       this.app = helpers.run(path.join(__dirname, '../generators/app'))
         .withOptions({ skipInstall: true })
         .withPrompts({
+          gh_should_create: false,
           gh_user_name: 'gob_bluth',
           gh_page_type: 'project',
           gh_repo_name: 'magic'

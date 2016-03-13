@@ -23,12 +23,14 @@
     "chalk": "^1.1.0",
     "lodash": "^3.10.1",
     "octonode": "^0.7.4",
-    "yeoman-generator": "^0.21.0",
+    "yeoman-assert": "^2.1.1",
+    "yeoman-generator": "^0.22.1",
+    "yeoman-test": "^1.1.0",
     "yosay": "^1.1.0"
   },
   "devDependencies": {
-    "mocha": "*",
-    "mocha-jshint": "^2.2.3",
+    "mocha": "^2.4.1",
+    "mocha-jshint": "^2.3.1",
     "proxyquire": "^1.7.4"
   }
 }

@@ -2,8 +2,8 @@
 
 var proxyquire = require('proxyquire'),
     path = require('path'),
-    assert = require('yeoman-generator').assert,
-    helpers = require('yeoman-generator').test;
+    assert = require('yeoman-assert'),
+    helpers = require('yeoman-test');
 
 describe('jekyll-ghpages:github', function() {
   beforeEach(function(done) {

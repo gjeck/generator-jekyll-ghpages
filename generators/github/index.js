@@ -4,9 +4,9 @@ var yeoman = require('yeoman-generator'),
     github = require('octonode'),
     chalk = require('chalk');
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = yeoman.Base.extend({
   constructor: function() {
-    yeoman.generators.Base.apply(this, arguments);
+    yeoman.Base.apply(this, arguments);
 
     this.option('gh_user_name', {
       type: String,
