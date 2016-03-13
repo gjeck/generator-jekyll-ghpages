@@ -6,7 +6,7 @@ var proxyquire = require('proxyquire'),
     helpers = require('yeoman-generator').test;
 
 describe('jekyll-ghpages:github', function() {
-  before(function(done) {
+  beforeEach(function(done) {
     var gh_instance_stub = {
       token: '',
       repo: function(opts, cb) {
@@ -33,6 +33,7 @@ describe('jekyll-ghpages:github', function() {
       },
     };
     proxyquire('../generators/github', { 'octonode': gh_stub });
+
     this.app = helpers.run(path.join(__dirname, '../generators/github'))
       .withOptions({
         gh_user_name: 'gob',

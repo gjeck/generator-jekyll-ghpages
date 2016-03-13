@@ -54,7 +54,7 @@ module.exports = yeoman.generators.Base.extend({
     this.options.gh_logs = [];
   },
 
-  createRepo: function() {
+  createGithubRepo: function() {
     var done = this.async();
 
     var client = this._getClient();

@@ -5,7 +5,7 @@ var path = require('path'),
     helpers = require('yeoman-generator').test;
 
 describe('jekyll-ghpages:jekyll', function() {
-  before(function(done) {
+  beforeEach(function(done) {
     helpers.run(path.join(__dirname, '../generators/jekyll'))
       .withOptions({
         project_title: 'test',

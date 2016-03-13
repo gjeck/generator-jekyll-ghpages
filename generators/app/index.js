@@ -269,5 +269,25 @@ module.exports = yeoman.generators.Base.extend({
     if (!this.options['skip-install']) {
       this.spawnCommand('bundle', ['install']);
     }
+  },
+
+  end: function() {
+    this.log(chalk.red('We are done, but I need you to do one more thing!'));
+    this.log(chalk.yellow(
+      'You need to initialize your local git repository.\n' +
+      ' Do this by running the following on the command line\n'
+    ));
+    this.log(chalk.green(
+      'git init'
+    ));
+    if (this.props.gh_should_create) {
+      this.log(chalk.green(
+        'git add -u\n' +
+        'git commit -m "Initial commit"' +
+        'git remote add origin ' + this.props.project_homepage +
+        '\ngit push -u origin master'
+      ));
+    }
   }
+
 });

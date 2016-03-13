@@ -5,7 +5,7 @@ var path = require('path'),
     helpers = require('yeoman-generator').test;
 
 describe('jekyll-ghpages:gulp', function() {
-  before(function(done) {
+  beforeEach(function(done) {
     helpers.run(path.join(__dirname, '../generators/gulp'))
       .on('end', done);
   });
@@ -17,7 +17,7 @@ describe('jekyll-ghpages:gulp', function() {
   });
 
   describe('user', function() {
-    before(function(done) {
+    beforeEach(function(done) {
       helpers.run(path.join(__dirname, '../generators/gulp'))
         .withOptions({
           gh_page_type: 'user',
@@ -31,7 +31,7 @@ describe('jekyll-ghpages:gulp', function() {
   });
 
   describe('project/org', function() {
-    before(function(done) {
+    beforeEach(function(done) {
       helpers.run(path.join(__dirname, '../generators/gulp'))
         .withOptions({
           gh_page_type: 'project',

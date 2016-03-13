@@ -5,7 +5,7 @@ var path = require('path'),
     helpers = require('yeoman-generator').test;
 
 describe('jekyll-ghpages:app', function() {
-  before(function(done) {
+  beforeEach(function(done) {
     this.app = helpers.run(path.join(__dirname, '../generators/app'))
       .withOptions({ skipInstall: true })
       .withPrompts({
@@ -53,7 +53,7 @@ describe('jekyll-ghpages:app', function() {
   });
 
   describe('project/org', function() {
-    before(function(done) {
+    beforeEach(function(done) {
       this.app = helpers.run(path.join(__dirname, '../generators/app'))
         .withOptions({ skipInstall: true })
         .withPrompts({
