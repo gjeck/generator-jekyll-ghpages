@@ -222,6 +222,10 @@ module.exports = yeoman.Base.extend({
         this.templatePath('gitignore'),
         this.destinationPath('.gitignore')
       );
+      this.fs.copy(
+        this.templatePath('nojekyll'),
+        this.destinationPath('.nojekyll')
+      );
     }
   },
 

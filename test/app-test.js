@@ -35,7 +35,8 @@ describe('jekyll-ghpages:app', function() {
       'CNAME',
       '.gitignore',
       '.editorconfig',
-      '.jshintrc'
+      '.jshintrc',
+      '.nojekyll'
     ]);
   });
 
