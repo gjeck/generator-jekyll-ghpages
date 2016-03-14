@@ -271,7 +271,7 @@ module.exports = yeoman.Base.extend({
       skipInstall: this.options['skip-install']
     });
     if (!this.options['skip-install']) {
-      this.spawnCommand('bundle', ['install']);
+      this.spawnCommandSync('bundle', ['install']);
     }
     if (this.props.gh_should_create) {
       this.spawnCommandSync('git', ['init']);
@@ -280,9 +280,6 @@ module.exports = yeoman.Base.extend({
       this.spawnCommandSync('git', ['remote', 'add', 'origin', this.props.project_homepage]);
       this.spawnCommandSync('git', ['push', '-u', 'origin', 'master']);
     }
-  },
-
-  end: function() {
-
   }
+
 });

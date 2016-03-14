@@ -1,6 +1,7 @@
 ### Jekyll-Ghpages ###
 .jekyll_tmp/
 .dist/
+.publish/
 
 ### Jekyll ###
 _site/
