@@ -118,7 +118,7 @@ module.exports = yeoman.Base.extend({
 
   _githubProjectURL: function(username, org, repo) {
     var baseURL = 'https://github.com',
-        potentials = [username, org, repo],
+        potentials = org ? [org, repo] : [username, repo],
         toAdd = _.filter(potentials, function(v) { return v; });
 
     return _.reduce(toAdd, function(total, add) {

@@ -53,7 +53,7 @@ describe('jekyll-ghpages:app', function() {
     });
   });
 
-  describe('project/org', function() {
+  describe('project', function() {
     beforeEach(function(done) {
       this.app = helpers.run(path.join(__dirname, '../generators/app'))
         .withOptions({ skipInstall: true })
@@ -76,6 +76,34 @@ describe('jekyll-ghpages:app', function() {
           repo = this.app.generator.props.gh_repo_name,
           test_homepage = this.app.generator.props.project_homepage,
           expected = 'https://github.com/' + user + '/' + repo;
+      assert.equal(test_homepage, expected);
+    });
+  });
+
+  describe('org', function() {
+    beforeEach(function(done) {
+      this.app = helpers.run(path.join(__dirname, '../generators/app'))
+        .withOptions({ skipInstall: true })
+        .withPrompts({
+          gh_should_create: false,
+          gh_user_name: 'gob_bluth',
+          gh_org_name: 'BluthCompany',
+          gh_page_type: 'organization',
+          gh_repo_name: 'magic'
+        })
+        .withGenerators([
+          [helpers.createDummyGenerator(), 'jekyll-ghpages:jekyll'],
+          [helpers.createDummyGenerator(), 'jekyll-ghpages:gulp'],
+          [helpers.createDummyGenerator(), 'jekyll-ghpages:github']
+        ])
+        .on('end', done);
+    });
+
+    it('creates a correct github homepage url', function() {
+      var org = this.app.generator.props.gh_org_name,
+          repo = this.app.generator.props.gh_repo_name,
+          test_homepage = this.app.generator.props.project_homepage,
+          expected = 'https://github.com/' + org + '/' + repo;
       assert.equal(test_homepage, expected);
     });
   });
