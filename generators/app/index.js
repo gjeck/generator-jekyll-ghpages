@@ -5,10 +5,10 @@ var yeoman = require('yeoman-generator'),
     yosay = require('yosay'),
     _ = require('lodash');
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = yeoman.Base.extend({
 
   constructor: function() {
-    yeoman.generators.Base.apply(this, arguments);
+    yeoman.Base.apply(this, arguments);
 
     this.option('skip-install', {
       desc: 'Skip installing dependencies',
@@ -222,6 +222,10 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath('gitignore'),
         this.destinationPath('.gitignore')
       );
+      this.fs.copy(
+        this.templatePath('nojekyll'),
+        this.destinationPath('.nojekyll')
+      );
     }
   },
 
@@ -269,25 +273,16 @@ module.exports = yeoman.generators.Base.extend({
     if (!this.options['skip-install']) {
       this.spawnCommand('bundle', ['install']);
     }
+    if (this.props.gh_should_create) {
+      this.spawnCommandSync('git', ['init']);
+      this.spawnCommandSync('git', ['add', '.']);
+      this.spawnCommandSync('git', ['commit', '-m', '"Initial Commit"']);
+      this.spawnCommandSync('git', ['remote', 'add', 'origin', this.props.project_homepage]);
+      this.spawnCommandSync('git', ['push', '-u', 'origin', 'master']);
+    }
   },
 
   end: function() {
-    this.log(chalk.red('We are done, but I need you to do one more thing!'));
-    this.log(chalk.yellow(
-      'You need to initialize your local git repository.\n' +
-      ' Do this by running the following on the command line\n'
-    ));
-    this.log(chalk.green(
-      'git init'
-    ));
-    if (this.props.gh_should_create) {
-      this.log(chalk.green(
-        'git add -u\n' +
-        'git commit -m "Initial commit"' +
-        'git remote add origin ' + this.props.project_homepage +
-        '\ngit push -u origin master'
-      ));
-    }
-  }
 
+  }
 });
